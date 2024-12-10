@@ -1,6 +1,4 @@
 
-
-
 let selectedPokemon = "Choose your pokemon";
 
 const App = () => {
