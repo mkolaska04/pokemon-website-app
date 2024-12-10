@@ -26,36 +26,38 @@ const App = () => {
       });
   };
 
- function handleInputSearch(event) {
-  console.log(event); 
-  if (event.key === 'Enter') {
-    const pokemonName = event.target.value.toLowerCase(); 
-    console.log(pokemonName); 
-    searchPokemon(pokemonName)
-      .then(data => {
-        selectedPokemon = data; 
-        console.log(selectedPokemon); 
-        renderApp();
-      })
-      .catch(error => handleSearchError(error)); 
-  } else {
-    filterFunction(); 
-  }
-}
-  function filterFunction() {
-  const input = document.getElementById("myInput");
-  const filter = input.value.toUpperCase(); 
-  const div = document.getElementById("myDropdown");
-  const list = div.getElementsByClassName("list");
-  for (let i = 0; i < list.length; i++) {
-    const txtValue = list[i].value;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      list[i].style.display = ""; 
+  function handleInputSearch(event) {
+    console.log(event);
+    if (event.key === 'Enter') {
+      const pokemonName = event.target.value.toLowerCase();
+      console.log(pokemonName);
+      searchPokemon(pokemonName)
+        .then(data => {
+          selectedPokemon = data;
+          console.log(selectedPokemon);
+          renderApp();
+        })
+        .catch(error => handleSearchError(error));
     } else {
-      list[i].style.display = "none"; 
+      filterFunction();
     }
   }
-}
+
+  // filter powinno renderować na nowo
+  function filterFunction() {
+    const input = document.getElementById("myInput");
+    const filter = input.value.toUpperCase();
+    const div = document.getElementById("myDropdown");
+    const list = div.getElementsByClassName("list");
+    for (let i = 0; i < list.length; i++) {
+      const txtValue = list[i].value;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        list[i].style.display = "";
+      } else {
+        list[i].style.display = "none";
+      }
+    }
+  }
 
   function handleSearchError(error) {
     selectedPokemon = "Sorry, no pokemon found with that name"
@@ -117,8 +119,8 @@ const App = () => {
       </div>
     );
   };
-
-  const pokemons = [
+// to powinno pobierać z api
+  const pokemons = [ 
     "bulbasaur",
     "ivysaur",
     "venusaur",
@@ -186,7 +188,7 @@ const App = () => {
             type="text"
             id="myInput"
             placeholder="Wyszukaj Pokemona"
-            onKeyDown={handleKeyDown} 
+            onKeyDown={handleKeyDown}
           />
 
           {pokemons.map((pokemon) => (
@@ -206,7 +208,7 @@ const App = () => {
   return (
     <div>
       <div className="navbar">
-        <PokemonList pokemons={pokemons} onPokemonClick={handleInputClick} onBtnClick={showDropdown} handleKeyDown={handleInputSearch}/>
+        <PokemonList pokemons={pokemons} onPokemonClick={handleInputClick} onBtnClick={showDropdown} handleKeyDown={handleInputSearch} />
       </div>
       <PokemonDetails pokemon={selectedPokemon} />
     </div>
