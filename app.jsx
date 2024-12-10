@@ -39,22 +39,22 @@ const App = () => {
         console.log(selectedPokemon); 
         renderApp();
       })
-      .catch(error => handleSearchError(error)); // Obsługa błędów
+      .catch(error => handleSearchError(error)); 
   } else {
     filterFunction(); 
   }
 }
   function filterFunction() {
   const input = document.getElementById("myInput");
-  const filter = input.value.toUpperCase(); // Pobieramy wartość z inputa i konwertujemy na wielkie litery
+  const filter = input.value.toUpperCase(); 
   const div = document.getElementById("myDropdown");
   const list = div.getElementsByClassName("list");
   for (let i = 0; i < list.length; i++) {
     const txtValue = list[i].value;
     if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      list[i].style.display = ""; // Pokazujemy element, jeśli pasuje do filtru
+      list[i].style.display = ""; 
     } else {
-      list[i].style.display = "none"; // Ukrywamy element, jeśli nie pasuje
+      list[i].style.display = "none"; 
     }
   }
 }
