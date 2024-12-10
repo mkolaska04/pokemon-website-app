@@ -6,7 +6,9 @@ body {
   width: 100%;
   color: #FFFAFF;
 }
-
+h1{
+  text-align: center;
+}
 .navbar {
   width: 100%;
   background-color: #303036;
@@ -86,7 +88,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .card {

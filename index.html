@@ -6,29 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="public/styles.css">
     <title>PokeDex</title>
+    
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="dropdown">
-            <button onclick="showDropdown()" class="dropbtn">Search your pokemon</button>
-            <div id="myDropdown" class="dropdown-content">
-                <input type="text" placeholder="Search.." id="myInput" onkeydown="handleInputSearch(event)">
-                <input class="list" type="button" onclick="handleInputClick(event)" value="bulbasaur"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="ivysaur"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="venusaur"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="ditto"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="snorlax"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="mewtwo"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="charizard"></input>
-                <input class="list" type="button" onclick="handleInputClick(event)" value="eevee"></input>
-            </div>
-        </div>
-    </div>
-    <div id="pokemon-info">
-            
-    </div>
-    <script src="./app.js"></script>
-</body>
+    <div id="root"></div>
+    <!-- React i ReactDOM z CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+    <!-- Twój kod React -->
+    <script type="text/babel" src="app.jsx"></script>
 
+</body>
 </html>
+
+
+
