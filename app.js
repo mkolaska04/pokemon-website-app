@@ -1,4 +1,5 @@
 const pokemonInfo = document.getElementById('pokemon-info');
+const dropdown = document.getElementById('myDropdown')
 
 
 function showDropdown() {
@@ -97,3 +98,44 @@ function handleInputSearch(event) {
 function showPokeinfo() {
   document.getElementById("poke-info").classList.toggle("show-info");
 }
+
+function fetch_list() {
+  return new Promise((resolve, reject) => {
+    fetch(`https://pokeapi.co/api/v2/pokemon`)
+    .then(response => {
+      if (!response.ok) {
+        reject(`HTTP error! status: ${response.status}`); 
+      }
+      return response.json()
+    })
+    .then(data => resolve(data)) 
+    .catch(error => reject(error)); 
+  }); 
+}
+
+function create_list() {
+  fetch_list()
+    .then((data) => {
+      data_to_element(data)
+    })
+    .catch((error) => list = `${error}`)
+}
+function data_to_element(data) {
+  const list = data.results
+  console.log(list)
+  const search_bar = '<input type="text" placeholder="Search.." id="myInput" onkeydown="handleInputSearch(event)">'
+  const poke_list = list.reduce((acc, curr, index) => {
+    console.log(curr.name)
+    element = `<input class="list" type="button" onclick="handleInputClick(event)" value="${curr.name}"></input>`
+    acc += element
+    return acc;
+  }, '')
+  console.log(poke_list)
+  dropdown.innerHTML = `
+    ${search_bar}
+    <div class="container">
+    ${poke_list}
+    </div>
+    `
+}
+create_list();
