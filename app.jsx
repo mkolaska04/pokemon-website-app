@@ -1,83 +1,27 @@
 
 let selectedPokemon = "Choose your pokemon";
+let pokemons = []
+let filtred_pokemons = []
+let searchValue = ""
+
+const fetch_list = async () => {
+  try {
+    const res = await fetch("https://pokeapi.co/api/v2/pokemon");
+    const json = await res.json();
+
+    const fetched_pokemons = await Promise.all(
+      json.results.map(async (pokemon) => { return pokemon.name })
+    )
+    pokemons = fetched_pokemons;
+    renderApp();
+  
+  }
+  catch (err) {
+    console.error('Nie załadowano Pokemonów', err)
+  }
+};
 
 const App = () => {
-
-  const showDropdown = () => {
-    document.getElementById("myDropdown").classList.toggle("show");
-  };
-
-  function showPokeinfo() {
-    document.getElementById("poke-info").classList.toggle("show-info");
-  }
-
-  const handleInputClick = (pokemonName) => {
-    console.log(pokemonName);
-    searchPokemon(pokemonName)
-      .then((data) => {
-        selectedPokemon = data;
-        console.log(selectedPokemon)
-      })
-      .then(() => {
-        renderApp();
-      })
-      .catch((error) => {
-        handleSearchError(error);
-      });
-  };
-
-  function handleInputSearch(event) {
-    console.log(event);
-    if (event.key === 'Enter') {
-      const pokemonName = event.target.value.toLowerCase();
-      console.log(pokemonName);
-      searchPokemon(pokemonName)
-        .then(data => {
-          selectedPokemon = data;
-          console.log(selectedPokemon);
-          renderApp();
-        })
-        .catch(error => handleSearchError(error));
-    } else {
-      filterFunction();
-    }
-  }
-
-  // filter powinno renderować na nowo
-  function filterFunction() {
-    const input = document.getElementById("myInput");
-    const filter = input.value.toUpperCase();
-    const div = document.getElementById("myDropdown");
-    const list = div.getElementsByClassName("list");
-    for (let i = 0; i < list.length; i++) {
-      const txtValue = list[i].value;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        list[i].style.display = "";
-      } else {
-        list[i].style.display = "none";
-      }
-    }
-  }
-
-  function handleSearchError(error) {
-    selectedPokemon = "Sorry, no pokemon found with that name"
-    console.log(error);
-    renderApp();
-  }
-
-  const searchPokemon = (pokemonName) => {
-    return new Promise((resolve, reject) => {
-      fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-        .then(response => {
-          if (!response.ok) {
-            reject(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => resolve(data))
-        .catch(error => reject(error));
-    });
-  };
 
   const PokemonDetails = ({ pokemon }) => {
     if (typeof (pokemon) !== "object") {
@@ -119,64 +63,10 @@ const App = () => {
       </div>
     );
   };
-// to powinno pobierać z api
-  const pokemons = [ 
-    "bulbasaur",
-    "ivysaur",
-    "venusaur",
-    "charmander",
-    "charmeleon",
-    "charizard",
-    "squirtle",
-    "wartortle",
-    "blastoise",
-    "caterpie",
-    "metapod",
-    "butterfree",
-    "weedle",
-    "kakuna",
-    "beedrill",
-    "pidgey",
-    "pidgeotto",
-    "pidgeot",
-    "rattata",
-    "raticate",
-    "spearow",
-    "fearow",
-    "ekans",
-    "arbok",
-    "pikachu",
-    "raichu",
-    "sandshrew",
-    "sandslash",
-    "nidoran-f",
-    "nidorina",
-    "nidoqueen",
-    "nidoran-m",
-    "nidorino",
-    "nidoking",
-    "clefairy",
-    "clefable",
-    "vulpix",
-    "ninetales",
-    "jigglypuff",
-    "wigglytuff",
-    "zubat",
-    "golbat",
-    "oddish",
-    "gloom",
-    "vileplume",
-    "paras",
-    "parasect",
-    "venonat",
-    "venomoth",
-    "diglett",
-    "dugtrio",
-    "meowth",
-    "pers"
-  ];
 
-  const PokemonList = ({ pokemons, onBtnClick, onPokemonClick, handleKeyDown }) => {
+  const PokemonList = ({ onBtnClick, onPokemonClick, handleKeyDown }) => {
+    const filtred_pokemons = pokemons.filter(pokemon => pokemon.toLowerCase().includes(searchValue.toLowerCase()))
+
     return (
       <div className="dropdown">
         <button onClick={onBtnClick} className="dropbtn">
@@ -190,36 +80,109 @@ const App = () => {
             placeholder="Wyszukaj Pokemona"
             onKeyDown={handleKeyDown}
           />
-
-          {pokemons.map((pokemon) => (
-            <input
-              key={pokemon}
-              className="list"
-              type="button"
-              value={pokemon}
-              onClick={() => onPokemonClick(pokemon)}
-            />
-          ))}
+          <div className="container">
+            {filtred_pokemons.map((pokemon) => (
+              <input
+                key={pokemon}
+                className="list"
+                type="button"
+                value={pokemon}
+                onClick={() => onPokemonClick(pokemon)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );
   };
 
+  const showDropdown = () => {
+    document.getElementById("myDropdown").classList.toggle("show");
+  };
+
+  function showPokeinfo() {
+    document.getElementById("poke-info").classList.toggle("show-info");
+  }
+
+  const handleInputClick = (pokemonName) => {
+    console.log(pokemonName);
+    searchPokemon(pokemonName)
+      .then((data) => {
+        selectedPokemon = data;
+        console.log(selectedPokemon)
+      })
+      .then(() => {
+        renderApp();
+      })
+      .catch((error) => {
+        handleSearchError(error);
+      });
+  };
+
+  const handleSearchChange = (e) => {
+    console.log(e.key);
+    if (e.key !== "Enter") {
+      searchValue = e.target.value;
+      
+    } else if (e.key === "Enter") {
+      searchPokemon(searchValue)
+        .then((data) => {
+          selectedPokemon = data;
+          console.log(selectedPokemon)
+        })
+        .then(() => {
+          renderApp();
+        })
+        .catch((error) => {
+          handleSearchError(error);
+        });
+    }
+    
+    
+  };
+
+
+  function handleSearchError(error) {
+    selectedPokemon = "Sorry, no pokemon found with that name"
+    console.log(error);
+    renderApp();
+  }
+
+  const searchPokemon = (pokemonName) => {
+    return new Promise((resolve, reject) => {
+      fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+        .then(response => {
+          if (!response.ok) {
+            reject(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => resolve(data))
+        .catch(error => reject(error));
+    });
+  };
+
+
+
   return (
     <div>
       <div className="navbar">
-        <PokemonList pokemons={pokemons} onPokemonClick={handleInputClick} onBtnClick={showDropdown} handleKeyDown={handleInputSearch} />
-      </div>
+            {<PokemonList onBtnClick={showDropdown} onPokemonClick={handleInputClick} handleKeyDown={handleSearchChange} />}
+        </div>
       <PokemonDetails pokemon={selectedPokemon} />
     </div>
   );
 };
 
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const renderApp = () => {
-  ReactDOM.render(<App />, document.getElementById("root"));
+
+  root.render(<App />);
 };
 
-renderApp();
+// renderApp();
+fetch_list();
+
 
 
